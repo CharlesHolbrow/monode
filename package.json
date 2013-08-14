@@ -1,0 +1,46 @@
+{
+  "name": "monome",
+  "description": "Testing osc in nodejs",
+  "version": "0.1.0",
+  "homepage": "https://github.com/charlesholbrow/grunt",
+  "author": {
+    "name": "Charles Holbrow",
+    "email": "charlesholbrow@gmail.com",
+    "url": "www.CharlesHolbrow.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/charlesholbrow/grunt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/charlesholbrow/grunt/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/charlesholbrow/grunt/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "lib/monome",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {
+    "node-osc": "0.2.1",
+    "portscanner": "0.1.3"
+  },
+  "devDependencies": {
+    "grunt-contrib-watch": "~0.5.0",
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-coffeelint": "~0.0.7",
+    "grunt-simple-mocha": "~0.4.0",
+    "should": "~1.2.2",
+    "mocha-cakes": "~0.9.0",
+    "grunt": "~0.4.1"
+  },
+  "keywords": []
+}
