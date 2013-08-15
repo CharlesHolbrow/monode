@@ -40,7 +40,8 @@ module.exports.init = ->
     # do we need to request the device list to get device info?
     else if address == '/serialosc/add'
       id = msg[1]
-      unless devices[id] then discovery.send '/serialosc/list', '127.0.0.1', 3333
+      unless devices[id]
+        discovery.send '/serialosc/list', '127.0.0.1', 3333
 
     # delete the device on unplug
     else if address == '/serialosc/remove'

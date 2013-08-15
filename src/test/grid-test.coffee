@@ -1,19 +1,42 @@
 'use strict'
 
-makeGrid = require('../lib/grid')
+osc       = require 'node-osc'
+makeGrid  = require '../lib/grid'
 
 grid = null
-before ->
-  grid = makeGrid()
+DEVICE_PORT= 9009
 
-after ->
-  grid.close()
+# create a new grid at every descrive at current indentation level
+before -> grid = makeGrid(DEVICE_PORT)
+after -> grid.close()
 
-describe 'makeGrid', ()->
-  it 'should return an event emitter', ()->
-    grid.should.be.a('object')
-    grid.on.should.be.a('function')
-    grid.emit.should.be.a('function')
+describe 'makeGrid', ->
+  port = null
+  it 'should emit a "listening" event, and pass a port number', (done)->
+    @timeout 500
+    grid.on 'listening', (_port)->
+      _port.should.be.a('number')
+      port = _port
+      done()
+
+  describe 'width', ->
+    it 'should be be undefined when first created', ->
+      'undefined'.should.equal typeof grid.width
+    it 'should throw an error on assignment', ->
+      error = 'No Error' # Is there a better way?
+      try grid.width = 5
+      catch err then error = err
+      error.should.be.an.instanceOf(Error)
+    it 'should update the width when we send a new size to our server port', (done)->
+      client = new osc.Client 'localhost', port
+      # pretend we are serialosc, and we are sending a size
+      client.send '/sys/size', 8, 16
+      setTimeout ->
+        (8).should.equal(grid.width)
+        done()
+      , 1
+
+
 
 ###
 ======== A Handy Little Mocha Reference ========
