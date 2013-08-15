@@ -2,6 +2,19 @@
 
 makeGrid = require('../lib/grid')
 
+grid = null
+before ->
+  grid = makeGrid()
+
+after ->
+  grid.close()
+
+describe 'makeGrid', ()->
+  it 'should return an event emitter', ()->
+    grid.should.be.a('object')
+    grid.on.should.be.a('function')
+    grid.emit.should.be.a('function')
+
 ###
 ======== A Handy Little Mocha Reference ========
 https://github.com/visionmedia/should.js
@@ -51,16 +64,3 @@ Should assertions:
   user.should.have.property('pets').with.lengthOf(4)
   user.should.be.a('object').and.have.property('name', 'tj')
 ###
-
-grid = null
-before ->
-  grid = makeGrid()
-
-describe 'makeGrid', ()->
-  it 'should return an object', ()->
-    grid.should.be.a('object')
-
-  it 'should be an event emitter', () ->
-    grid.on.should.be.a('function')
-    grid.emit.should.be.a('function')
-

@@ -42,4 +42,8 @@ module.exports = makeGrid = (devicePort)->
     i = msg[3]
     client.send(setLedAddr, x, y, i)
 
+  # Public Methods
+  grid.close = ->
+    if server then server.kill()
+
   return grid

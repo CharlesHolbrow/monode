@@ -39,7 +39,6 @@ module.exports.init = ->
     # a new device has been added
     # do we need to request the device list to get device info?
     else if address == '/serialosc/add'
-      console.log 'add'
       id = msg[1]
       unless devices[id] then discovery.send '/serialosc/list', '127.0.0.1', 3333
 
@@ -61,9 +60,5 @@ module.exports.init = ->
 
 
   discovery.send '/serialosc/list', '127.0.0.1', 3333
-  setTimeout(
-    ->
-      discovery.send '/serialosc/notify', '127.0.0.1', 3333
-    100
-  )
+  discovery.send '/serialosc/notify', '127.0.0.1', 3333
 
