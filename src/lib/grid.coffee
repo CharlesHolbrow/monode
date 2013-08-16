@@ -12,33 +12,26 @@ module.exports = makeGrid = (devicePort)->
   keyAddr     = null
   width       = undefined
   height      = undefined
+  port        = 10100
 
   Object.defineProperty grid, 'width', get: -> width
   Object.defineProperty grid, 'height', get: -> height
 
-  # create a server that listens for info from the device
-  portscanner.findAPortNotInUse 10100, 10200, 'localhost', (err, port) ->
-    if err
-      console.error 'makeGrid Could not find an open port'
-      throw err
+  # We have an open port number
+  server = new osc.Server(port, 'localhost')
+  server.on 'message', (msg, info)->
+    address = msg[0]
+    if address == '/sys/prefix'
+      handlePrefix(msg)
+    if address == '/sys/size'
+      handleSize(msg)
+    else if address == keyAddr
+      handleKey(msg)
 
-    # We have an open port number
-    server = new osc.Server(port, 'localhost')
-    server.on 'message', (msg, info)->
-      address = msg[0]
-      if address == '/sys/prefix'
-        handlePrefix(msg)
-      if address == '/sys/size'
-        handleSize(msg)
-      else if address == keyAddr
-        handleKey(msg)
-
-    # Set default port that device will send to
-    client.send '/sys/port', port
-    # get the device info
-    client.send '/sys/info', port
-    # let the world know we are ready to hear from the device
-    grid.emit 'listening', port
+  # Set default port that device will send to
+  client.send '/sys/port', port
+  # get the device info
+  client.send '/sys/info', port
 
   handlePrefix = (msg)->
     prefix      = msg[1]
