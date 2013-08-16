@@ -17,7 +17,6 @@ module.exports = makeGrid = (devicePort)->
   Object.defineProperty grid, 'width', get: -> width
   Object.defineProperty grid, 'height', get: -> height
 
-  # We have an open port number
   server = new osc.Server(port, 'localhost')
   server.on 'message', (msg, info)->
     address = msg[0]

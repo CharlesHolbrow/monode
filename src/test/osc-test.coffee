@@ -8,9 +8,11 @@ console.log osc.toString()
 describe 'osc', ->
 
   describe 'Server', ->
-    it 'should create an instance of node-osc.Server', ->
-      server = new osc.Server(10111)
-      server.should.be.an.instanceOf nodeOsc.Server
+    it 'should create an instance of node-osc.Server', (done)->
+      @timeout 300
+      osc.Server (err, server)->
+        server.should.be.an.instanceOf nodeOsc.Server
+        done err
 
   describe 'Client', ->
     it 'should be an instance of node-osc.Client', ->
