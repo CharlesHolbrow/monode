@@ -1,8 +1,8 @@
 {
-  "name": "monome",
+  "name": "node-monome",
   "description": "Testing osc in nodejs",
   "version": "0.1.0",
-  "homepage": "https://github.com/charlesholbrow/grunt",
+  "homepage": "https://github.com/charlesholbrow/node-monome",
   "author": {
     "name": "Charles Holbrow",
     "email": "charlesholbrow@gmail.com",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/charlesholbrow/grunt.git"
+    "url": "git://github.com/charlesholbrow/node-monome.git"
   },
   "bugs": {
-    "url": "https://github.com/charlesholbrow/grunt/issues"
+    "url": "https://github.com/charlesholbrow/node-monome/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/charlesholbrow/grunt/blob/master/LICENSE-MIT"
+      "url": "https://github.com/charlesholbrow/node-monome/blob/master/LICENSE-MIT"
     }
   ],
   "main": "lib/monome",
