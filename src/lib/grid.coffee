@@ -27,13 +27,13 @@ module.exports = makeGrid = (devicePort)->
         handleSize(msg)
       else if address == keyAddr
         handleKey(msg)
-
+    # we are ready to receive device info
+    grid.emit 'listening', server.port
     # Set default port that device will send to
     client.send '/sys/port', port
     # get the device info
     client.send '/sys/info', port
-    # we are ready to receive device info
-    grid.emit 'listening'
+
 
   handlePrefix = (msg)->
     prefix      = msg[1]
@@ -54,7 +54,11 @@ module.exports = makeGrid = (devicePort)->
   grid.close = ->
     if server then server.kill()
 
-  Object.defineProperty grid, 'width', get: -> width
-  Object.defineProperty grid, 'height', get: -> height
+  Object.defineProperty grid, 'width',
+    get: -> width
+    enumerable: true
+  Object.defineProperty grid, 'height',
+    get: -> height,
+    enumerable: true
 
   return grid
