@@ -2,6 +2,7 @@
 
 osc       = require 'node-osc'
 makeGrid  = require '../lib/grid'
+should    = require 'should'
 
 grid = null
 DEVICE_PORT= 9009
@@ -12,8 +13,8 @@ after -> grid.close()
 
 describe 'makeGrid', ->
   describe 'width', ->
-    it 'should be be undefined when first created', ->
-      'undefined'.should.equal typeof grid.width
+    it 'should be be null when first created', ->
+      should.strictEqual grid.width, null
     it 'should throw an error on assignment', ->
       error = 'No Error' # Is there a better way?
       try grid.width = 5

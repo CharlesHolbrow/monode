@@ -9,8 +9,10 @@ module.exports = makeGrid = (devicePort)->
   prefix      = null
   setLedAddr  = null
   keyAddr     = null
-  width       = undefined
-  height      = undefined
+
+  # exposed with getters and setters
+  width       = null
+  height      = null
   port        = null
 
   new osc.Server 10200, (error, _server)->
@@ -33,7 +35,6 @@ module.exports = makeGrid = (devicePort)->
     client.send '/sys/port', port
     # get the device info
     client.send '/sys/info', port
-
 
   handlePrefix = (msg)->
     prefix      = msg[1]
