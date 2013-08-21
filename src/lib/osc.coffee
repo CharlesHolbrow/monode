@@ -16,7 +16,7 @@ exports.Server = (port = 8000, callback, host = '0.0.0.0')->
         return callback(new Error 'Failed to find available port')
       else
         findOpenServer check + 1 # recurse
-    , 10
+    , 20
 
     server = new nodeOsc.Server(check, host)
     server.on 'message', (msg, rinfo)->

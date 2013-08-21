@@ -1,14 +1,9 @@
-# monome
+# node-monome
 
-Testing osc in nodejs
+monome and arc toolkit in node.js
 
 ## Getting Started
-Install the module with: `npm install monome`
-
-```javascript
-var monome = require('monome');
-monome.awesome(); // "awesome"
-```
+_(Coming soon)_
 
 ## Documentation
 _(Coming soon)_

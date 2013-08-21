@@ -11,7 +11,6 @@ before -> grid = makeGrid(DEVICE_PORT)
 after -> grid.close()
 
 describe 'makeGrid', ->
-  port = 10100
   describe 'width', ->
     it 'should be be undefined when first created', ->
       'undefined'.should.equal typeof grid.width
@@ -27,8 +26,13 @@ describe 'makeGrid', ->
       setTimeout ->
         (8).should.equal(grid.width)
         done()
-      , 10
-
+      , 100
+    it 'should emit a "listening" event when the server is setup', (done)->
+      @timeout(200)
+      grid = makeGrid(DEVICE_PORT + 1)
+      grid.on 'listening', ->
+        grid.close()
+        done()
 
 
 ###
