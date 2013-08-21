@@ -10,10 +10,13 @@ module.exports = makeGrid = (devicePort)->
   setLedAddr  = null
   keyAddr     = null
 
-  # exposed with getters and setters
+  # exposed with getters
   width       = null
   height      = null
   port        = null
+  id          = null
+  host        = null
+  rotation    = null
 
   new osc.Server 10200, (error, _server)->
     if error
@@ -23,10 +26,11 @@ module.exports = makeGrid = (devicePort)->
     port = server.port
     server.on 'message', (msg, info)->
       address = msg[0]
-      if address == '/sys/prefix'
-        handlePrefix(msg)
-      if address == '/sys/size'
-        handleSize(msg)
+      if address == '/sys/prefix' then handlePrefix(msg)
+      else if address == '/sys/size' then handleSize(msg)
+      else if address == '/sys/id' then handleId(msg)
+      else if address == '/sys/host' then handleHost(msg)
+      else if address == '/sys/rotation' then handleHandle(msg)
       else if address == keyAddr
         handleKey(msg)
     # we are ready to receive device info
@@ -40,10 +44,15 @@ module.exports = makeGrid = (devicePort)->
     prefix      = msg[1]
     setLedAddr  = prefix + '/grid/led/set'
     keyAddr     = prefix + '/grid/key'
-
   handleSize = (msg)->
     width   = msg[1]
     height  = msg[2]
+  handleId =  (msg)->
+    id = msg[1]
+  handleHost = (msg)->
+    host = msg[1]
+  handleRotation = (msg)->
+    rotation = msg[1]
 
   handleKey = (msg)->
     x = msg[1]
@@ -60,6 +69,15 @@ module.exports = makeGrid = (devicePort)->
     enumerable: true
   Object.defineProperty grid, 'height',
     get: -> height,
+    enumerable: true
+  Object.defineProperty grid, 'rotation',
+    get: -> rotation
+    enumerable: true
+  Object.defineProperty grid, 'id',
+    get: -> id
+    enumerable: true
+  Object.defineProperty grid, 'host',
+    get: -> host
     enumerable: true
 
   return grid
