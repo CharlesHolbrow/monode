@@ -19,20 +19,19 @@ describe 'makeGrid', ->
       try grid.width = 5
       catch err then error = err
       error.should.be.an.instanceOf(Error)
-    it 'should update the width when we send a new size to our server port', (done)->
-      client = new osc.Client 'localhost', port
-      # pretend we are serialosc, and we are sending a size
-      client.send '/sys/size', 8, 16
-      setTimeout ->
-        (8).should.equal(grid.width)
-        done()
-      , 100
-    it 'should emit a "listening" event when the server is setup', (done)->
+    it 'should emit "listening" and listen for "size"', (done)->
       @timeout(200)
-      grid = makeGrid(DEVICE_PORT + 1)
-      grid.on 'listening', ->
-        grid.close()
-        done()
+      gridB = makeGrid(DEVICE_PORT + 1)
+      gridB.on 'listening', (port)->
+        # pretend we are serialosc, and we are sending a size
+        client = new osc.Client 'localhost', port
+        client.send '/sys/size', 8, 16
+        setTimeout ->
+          (8).should.equal(gridB.width)
+          (16).should.equal(gridB.height)
+          gridB.close()
+          done()
+        , 10
 
 
 ###
