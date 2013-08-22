@@ -1,6 +1,6 @@
 {
   "name": "node-monome",
-  "description": "Testing osc in nodejs",
+  "description": "Toolkit for the monome and arc osc controllers",
   "version": "0.1.0",
   "homepage": "https://github.com/charlesholbrow/node-monome",
   "author": {
