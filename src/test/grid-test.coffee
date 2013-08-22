@@ -34,6 +34,32 @@ describe 'makeGrid', ->
           done()
         , 10
 
+  describe 'ready event', ->
+    it 'should emit "ready" only once all 6 sys messages have been received', (done)->
+      @timeout(200)
+      gridC = makeGrid(DEVICE_PORT + 3)
+      gridC.on 'listening', (port)->
+        client = new osc.Client 'localhost', port
+        error = new Error 'grid triggered ready too soon'
+        gridC.on 'ready', ->
+          'm9999999'.should.equal gridC.id
+          (8).should.equal gridC.width
+          (8).should.equal gridC.height
+          '127.0.0.1'.should.equal gridC.host
+          port.should.equal gridC.port
+          '/testprefix'.should.equal gridC.prefix
+          (180).should.equal gridC.rotation
+          done(error)
+
+        client.send '/sys/id', 'm9999999'
+        client.send '/sys/size', 8, 8
+        client.send '/sys/host', '127.0.0.1'
+        client.send '/sys/port', port
+        client.send '/sys/prefix', '/testprefix'
+        setTimeout =>
+          client.send '/sys/rotation', 180
+          error = null
+        , 20
 
 ###
 ======== A Handy Little Mocha Reference ========

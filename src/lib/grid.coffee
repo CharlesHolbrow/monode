@@ -9,6 +9,7 @@ module.exports = makeGrid = (devicePort)->
   prefix      = null
   setLedAddr  = null
   keyAddr     = null
+  ready       = false
 
   # exposed with getters
   width       = null
@@ -30,9 +31,8 @@ module.exports = makeGrid = (devicePort)->
       else if address == '/sys/size' then handleSize(msg)
       else if address == '/sys/id' then handleId(msg)
       else if address == '/sys/host' then handleHost(msg)
-      else if address == '/sys/rotation' then handleHandle(msg)
-      else if address == keyAddr
-        handleKey(msg)
+      else if address == '/sys/rotation' then handleRotation(msg)
+      else if address == keyAddr then handleKey(msg)
     # we are ready to receive device info
     grid.emit 'listening', server.port
     # Set default port that device will send to
@@ -44,15 +44,25 @@ module.exports = makeGrid = (devicePort)->
     prefix      = msg[1]
     setLedAddr  = prefix + '/grid/led/set'
     keyAddr     = prefix + '/grid/key'
+    grid.emit 'prefix', prefix
+    isReady()
   handleSize = (msg)->
     width   = msg[1]
     height  = msg[2]
+    grid.emit 'size', width, height
+    isReady()
   handleId =  (msg)->
     id = msg[1]
+    grid.emit 'id', id
+    isReady()
   handleHost = (msg)->
     host = msg[1]
+    grid.emit 'host', host
+    isReady()
   handleRotation = (msg)->
     rotation = msg[1]
+    grid.emit 'rotation', rotation
+    isReady()
 
   handleKey = (msg)->
     x = msg[1]
@@ -60,10 +70,15 @@ module.exports = makeGrid = (devicePort)->
     i = msg[3]
     client.send(setLedAddr, x, y, i)
 
+  isReady = ->
+    if not ready
+      if height and port and id and host and rotation and prefix
+        ready = true
+        grid.emit 'ready'
+
   # Public Methods
   grid.close = ->
     if server then server.kill()
-
   Object.defineProperty grid, 'width',
     get: -> width
     enumerable: true
@@ -78,6 +93,15 @@ module.exports = makeGrid = (devicePort)->
     enumerable: true
   Object.defineProperty grid, 'host',
     get: -> host
+    enumerable: true
+  Object.defineProperty grid, 'port',
+    get: -> port
+    enumerable: true
+  Object.defineProperty grid, 'prefix',
+    get: -> prefix
+    enumerable: true
+  Object.defineProperty grid, 'ready',
+    get: -> ready
     enumerable: true
 
   return grid
