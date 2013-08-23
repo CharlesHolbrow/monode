@@ -3,8 +3,6 @@
 nodeOsc = require 'node-osc'
 osc     = require '../lib/osc'
 
-console.log osc.toString()
-
 describe 'osc', ->
 
   describe 'Server', ->

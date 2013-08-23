@@ -1,1 +1,1 @@
-monome = require('./monome').init()
+monome = require('./monome')()

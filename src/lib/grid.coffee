@@ -32,6 +32,7 @@ module.exports = makeGrid = (devicePort)->
       else if address == '/sys/id' then handleId(msg)
       else if address == '/sys/host' then handleHost(msg)
       else if address == '/sys/rotation' then handleRotation(msg)
+      else if address == '/sys/disconnect' then handleDisconnect(msg)
       else if address == keyAddr then handleKey(msg)
     # we are ready to receive device info
     grid.emit 'listening', server.port
@@ -63,6 +64,8 @@ module.exports = makeGrid = (devicePort)->
     rotation = msg[1]
     grid.emit 'rotation', rotation
     isReady()
+  handleDisconnect = (msg)->
+    grid.emit 'disconnect', id
 
   handleKey = (msg)->
     x = msg[1]

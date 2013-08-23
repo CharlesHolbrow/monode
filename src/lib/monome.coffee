@@ -1,65 +1,63 @@
 ###
 monome
-https://github.com/charlesholbrow/grunt
+https://github.com/charlesholbrow/node-monome
 
 Copyright (c) 2013 Charles Holbrow
 Licensed under the MIT license.
 ###
 
-
 'use strict'
 
+events    = require 'events'
+makeGrid  = require './grid'
+osc       = require './osc'
 
-osc = require 'node-osc'
-events = require 'events'
-makeGrid = require './grid'
+PORT = 3333
+monome = null
+devices = null
 
-# devices by id
-module.exports.devices = devices = {}
+module.exports = ->
+  if monome then return monome
+  monome = new events.EventEmitter()
+  monome.devices = devices
 
-module.exports.init = ->
+  devices = {} # devices by id
+  serialosc = osc.Client 12002
 
-  listen = new osc.Server 3333, '127.0.0.1'
-  discovery = new osc.Client '127.0.0.1', 12002
+  osc.Server PORT, (error, listen)->
+    if error
+      throw new Error('Failed to open main server: ' + error)
+    if listen.port != PORT
+      throw new Error('Failed to listen on udp port ' + port +
+      '. Is node-monome already running?')
 
-  listen.on 'message', (msg, info)->
-    address = msg[0]
+    # listen to serialosc
+    listen.on 'message', (msg, info)->
+      # receive device info
+      if msg[0] == '/serialosc/device'
+        id = msg[1]
+        type = msg[2]
+        port = msg[3]
+        if devices[id]
+          devices[id].emit 'disconnect'
+          devices[id].removeAllListeners()
+          if devices[id] then delete devices[id]
+        console.log 'Connect:', msg, '\n'
+        device = makeGrid(port, type)
+        devices[id] = device
+        device.on 'disconnect', (id)->
+          if devices[id]
+            console.log 'Disconnect:', msg, '\n'
+            delete devices[id]
+      # a new device connected
+      else if msg[0] == '/serialosc/add'
+        id = msg[1]
+        unless devices[id]
+          serialosc.send '/serialosc/list', '127.0.0.1', PORT
 
-    # receiving device info
-    # makeDevice only if we need to
-    if address == '/serialosc/device'
-      id = msg[1]
-      type = msg[2]
-      port = msg[3]
-      unless devices[id]
-        console.log '---Found Device---'
-        console.log 'device:', msg, '\n'
-        devices[id] = makeGrid(port, type)
+    # get a list of all the connected devices
+    serialosc.send '/serialosc/list', '127.0.0.1', PORT
+    serialosc.send '/serialosc/notify', '127.0.0.1', PORT
+  return monome
 
-    # a new device has been added
-    # do we need to request the device list to get device info?
-    else if address == '/serialosc/add'
-      id = msg[1]
-      unless devices[id]
-        discovery.send '/serialosc/list', '127.0.0.1', 3333
-
-    # delete the device on unplug
-    else if address == '/serialosc/remove'
-      console.log 'remove'
-      id = msg[1]
-      if devices[id]
-        console.log '---Remove Device---'
-        console.log 'device:', msg, '\n'
-        delete devices[id]
-
-    console.log '---Message---'
-    console.log 'info:', info
-    console.log 'msg: ', msg
-    console.log '---devices---'
-    console.log devices
-    console.log ''
-
-
-  discovery.send '/serialosc/list', '127.0.0.1', 3333
-  discovery.send '/serialosc/notify', '127.0.0.1', 3333
-
+module.exports.devices = devices

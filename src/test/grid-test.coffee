@@ -1,8 +1,8 @@
 'use strict'
 
+should    = require 'should'
 osc       = require 'node-osc'
 makeGrid  = require '../lib/grid'
-should    = require 'should'
 
 grid = null
 DEVICE_PORT= 9009
@@ -35,7 +35,8 @@ describe 'makeGrid', ->
         , 10
 
   describe 'ready event', ->
-    it 'should emit "ready" only once all 6 sys messages have been received', (done)->
+    it 'should emit "ready" only once all 6 sys ' +
+    'messages have been received', (done)->
       @timeout(200)
       gridC = makeGrid(DEVICE_PORT + 3)
       gridC.on 'listening', (port)->
