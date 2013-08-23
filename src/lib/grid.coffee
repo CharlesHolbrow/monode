@@ -65,7 +65,7 @@ module.exports = makeGrid = (devicePort)->
     grid.emit 'rotation', rotation
     isReady()
   handleDisconnect = (msg)->
-    grid.emit 'disconnect', id
+    grid.emit 'disconnect'
 
   handleKey = (msg)->
     x = msg[1]
