@@ -66,13 +66,8 @@ module.exports = makeGrid = (devicePort)->
     isReady()
   handleDisconnect = (msg)->
     grid.emit 'disconnect'
-
   handleKey = (msg)->
-    x = msg[1]
-    y = msg[2]
-    i = msg[3]
-    client.send(setLedAddr, x, y, i)
-
+    grid.emit 'key', msg[1], msg[2], msg[3]
   isReady = ->
     if not ready
       if height and port and id and host and rotation and prefix
@@ -80,6 +75,8 @@ module.exports = makeGrid = (devicePort)->
         grid.emit 'ready'
 
   # Public Methods
+  grid.led = (x, y, i)->
+    client.send(setLedAddr, x, y, i)
   grid.close = ->
     if server then server.kill()
   Object.defineProperty grid, 'width',
@@ -90,6 +87,7 @@ module.exports = makeGrid = (devicePort)->
     enumerable: true
   Object.defineProperty grid, 'rotation',
     get: -> rotation
+    set: (value)-> client.send '/sys/rotation', value
     enumerable: true
   Object.defineProperty grid, 'id',
     get: -> id
@@ -102,6 +100,7 @@ module.exports = makeGrid = (devicePort)->
     enumerable: true
   Object.defineProperty grid, 'prefix',
     get: -> prefix
+    set: (value)-> client.send '/sys/prefix', value
     enumerable: true
   Object.defineProperty grid, 'ready',
     get: -> ready
