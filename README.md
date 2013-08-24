@@ -1,12 +1,48 @@
 # node-monome
 
 monome and arc toolkit in node.js
+required serialosc 1.2a or later
+arc support coming soon
 
 ## Getting Started
-_(Coming soon)_
+```
+npm install node-monome
+```
+```
+var monome = require('node-monome')();
+
+// light on key press
+monome.on('connect', function(device) {
+  device.on('key', function(x, y, i) {
+    device.led(x, y, i);
+  });
+});
+
+```
 
 ## Documentation
-_(Coming soon)_
+
+### device
+device.width
+device.height
+device.host
+device.port
+device.id
+device.rotation // set or get
+device.prefix // set or get
+
+// set prefix by assigning 0, 90, 180, 270 (asynchronous)
+device.rotation; // returns 90
+device.rotation = 180;
+device.rotation; // returns 90
+device.on('rotation', function(value){
+  console.log('rotation changed to:', rotation);
+});
+
+// turn on an led
+device.led(3, 4, 1);
+// turn off
+device.led(3, 4, 0);
 
 ## Examples
 _(Coming soon)_
