@@ -10,14 +10,14 @@ $ node
 > var monome = nodeMonome(); // initialize
 ```
 
-## Documentation
-When a device is connected, monome triggers a 'connect' event
+# Documentation
+When a device is connected and ready to use, monome triggers a 'device' event
 ```
 var nodeMonome = require('node-monome');
 var monome = nodeMonome(); // initialize
 
 // light grid led on key press
-monome.on('connect', function(device) {
+monome.on('device', function(device) {
   device.on('key', function(x, y, i) {
     device.led(x, y, i);
   });
@@ -31,17 +31,19 @@ Connected devices are stored in the devices object
 monome.devices
 ```
 
-### device
+## Device
+### Device Properties
 ```
 // Read-only properties
-device.width  // integer
-device.height // integer
+device.width  // integer - for arc, this is the same as size
+device.height // integer - for arc this is always 64
 device.host   // string
 device.port   // integer
 device.id     // string ex: "m0000164"
 device.type   // string ex: "monome arc 2", "monome 64"
 device.isArc  // bool
-device.osc    // [node-osc client](https://github.com/TheAlphaNerd/node-osc)
+device.size   // integer, arc only, 2 or 4
+device.osc    // [node-osc Client](https://github.com/TheAlphaNerd/node-osc)
 
 // Assignable properties
 device.rotation //  0, 90, 180, or 270
@@ -63,9 +65,12 @@ rotation changed to: 180
 device.led(3, 4, 1);
 // turn off led
 device.led(3, 4, 0);
+
+// send arbitrary osc message to serialosc
+device.osc.send(device.prefix + '/grid/led/all', 1)
 ```
 
-### device events
+### Device Events
 ```
 tilt // arc,grid
 enc // arc only
@@ -76,12 +81,31 @@ rotation
 ready // consider removing this
 ```
 
-## Contributing
+## monome
+### monome Events
+```
+// connect
+monome.on('connect', function(device){
+  console.log('a device was connected:', device);
+})
+// disconnect
+monome.on('disconnect', function(device){
+  console.log('A device was disconnected:', device);
+})
+// device - fired once the device has configured itself with width, height, etc
+monome.on('device', function(device){
+  console.log('A device was connected, and is ready to use')
+  console.log('Port:', device.port);
+  console.log('Dimentions:', device.width, device.height)
+});
+```
+
+# Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
-## Release History
-_(Nothing yet)_
+# Release History
+1.1.0 Add Arc Support
 
-## License
+# License
 Copyright (c) 2013 Charles Holbrow  
 Licensed under the MIT license.
