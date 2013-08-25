@@ -38,7 +38,7 @@ describe 'makeGrid', ->
     it 'should emit "ready" only once all 6 sys ' +
     'messages have been received', (done)->
       @timeout(200)
-      gridC = makeGrid(DEVICE_PORT + 3)
+      gridC = makeGrid(DEVICE_PORT + 3, 'monome 64')
       gridC.on 'listening', (port)->
         client = new osc.Client 'localhost', port
         error = new Error 'grid triggered ready too soon'

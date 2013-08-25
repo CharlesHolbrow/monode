@@ -12,7 +12,6 @@ module.exports = makeGrid = (devicePort, type)->
 
   # exposed with getters
   client      = new nodeOsc.Client('localhost', devicePort) # device.osc
-  isArc       = !!(type and type.match /monome arc.*/)
   prefix      = null
   width       = null
   height      = null
@@ -21,6 +20,10 @@ module.exports = makeGrid = (devicePort, type)->
   host        = null
   rotation    = null
   ready       = false
+  isArc       = type and type.match /monome arc (\d+)/
+  if isArc
+    size      = parseInt(isArc[1])
+  isArc       = !!isArc
 
   new osc.Server 10200, (error, _server)->
     if error
@@ -86,7 +89,7 @@ module.exports = makeGrid = (devicePort, type)->
     grid.emit 'tilt', msg[1], msg[2], msg[3]
   isReady = ->
     if not ready
-      if height != null and rotation != null and
+      if (height or size) and rotation != null and
       port and id and host and prefix
         ready = true
         grid.emit 'ready'
@@ -96,12 +99,24 @@ module.exports = makeGrid = (devicePort, type)->
     client.send(setLedAddr, x, y, i)
   grid.close = ->
     if server then server.kill()
-  Object.defineProperty grid, 'width',
-    get: -> width
-    enumerable: true
-  Object.defineProperty grid, 'height',
-    get: -> height,
-    enumerable: true
+
+  if isArc
+    Object.defineProperty grid, 'size',
+      get: -> size
+      enumerable: true
+    Object.defineProperty grid, 'width',
+      get: -> size
+      enumerable: true
+    Object.defineProperty grid, 'height',
+      get: -> 64
+      enumerable: true
+  else
+    Object.defineProperty grid, 'width',
+      get: -> width
+      enumerable: true
+    Object.defineProperty grid, 'height',
+      get: -> height
+      enumerable: true
   Object.defineProperty grid, 'rotation',
     get: -> rotation
     set: (value)-> client.send '/sys/rotation', value
