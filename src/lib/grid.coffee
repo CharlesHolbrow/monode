@@ -9,7 +9,10 @@ module.exports = makeGrid = (devicePort, type)->
   prefix      = null
   setLedAddr  = null
   keyAddr     = null
+  encAddr     = null
+  tiltAddr    = null
   ready       = false
+  isArc       = !!(type and type.match /monome arc.*/)
 
   # exposed with getters
   width       = null
@@ -34,6 +37,8 @@ module.exports = makeGrid = (devicePort, type)->
       else if address == '/sys/rotation' then handleRotation(msg)
       else if address == '/sys/disconnect' then handleDisconnect(msg)
       else if address == keyAddr then handleKey(msg)
+      else if address == encAddr then handleEnc(msg)
+      else if address == tiltAddr then handleTilt(msg)
     # we are ready to receive device info
     grid.emit 'listening', server.port
     # Set default port that device will send to
@@ -42,9 +47,15 @@ module.exports = makeGrid = (devicePort, type)->
     client.send '/sys/info', port
 
   handlePrefix = (msg)->
-    prefix      = msg[1]
-    setLedAddr  = prefix + '/grid/led/set'
-    keyAddr     = prefix + '/grid/key'
+    prefix        = msg[1]
+    tiltAddr      = prefix + 'tilt'
+    if isArc
+      keyAddr     = prefix + '/ring/key'
+      setLedAddr  = prefix + '/ring/set'
+      encAddr     = prefix + '/enc/delta'
+    else
+      keyAddr     = prefix + '/grid/key'
+      setLedAddr  = prefix + '/grid/led/set'
     grid.emit 'prefix', prefix
     isReady()
   handleSize = (msg)->
@@ -68,6 +79,10 @@ module.exports = makeGrid = (devicePort, type)->
     grid.emit 'disconnect'
   handleKey = (msg)->
     grid.emit 'key', msg[1], msg[2], msg[3]
+  handleEnc = (msg)->
+    grid.emit 'enc', msg[1], msg[2]
+  handleTilt = (msg)->
+    grid.emit 'tilt', msg[1], msg[2], msg[3]
   isReady = ->
     if not ready
       if height and port and id and host and rotation and prefix
@@ -110,6 +125,9 @@ module.exports = makeGrid = (devicePort, type)->
     enumerable: true
   Object.defineProperty grid, 'type',
     get: -> type
+    enumerable: true
+  Object.defineProperty grid, 'isArc',
+    get: -> isArc
     enumerable: true
 
   return grid
