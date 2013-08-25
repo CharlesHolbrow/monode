@@ -2,7 +2,7 @@ events  = require 'events'
 osc     = require './osc'
 nodeOsc = require 'node-osc'
 
-module.exports = makeGrid = (devicePort)->
+module.exports = makeGrid = (devicePort, type)->
   grid        = new events.EventEmitter()  # object to be returned
   client      = new nodeOsc.Client('localhost', devicePort)
   server      = null # create this once we have a port
@@ -104,6 +104,12 @@ module.exports = makeGrid = (devicePort)->
     enumerable: true
   Object.defineProperty grid, 'ready',
     get: -> ready
+    enumerable: true
+  Object.defineProperty grid, 'osc',
+    get: -> client
+    enumerable: true
+  Object.defineProperty grid, 'type',
+    get: -> type
     enumerable: true
 
   return grid
