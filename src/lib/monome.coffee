@@ -13,18 +13,16 @@ makeGrid  = require './grid'
 osc       = require './osc'
 
 PORT = 4545
-listen = null
-monome = null
-devices = null
 
 module.exports = ->
   if monome then return monome
+  listen = null
   monome = new events.EventEmitter()
   monome.devices = devices = {}
   serialosc = osc.Client 12002
 
   osc.Server PORT, (error, _listen)->
-    monome.listen = listen = _listen
+    listen = _listen
     if error
       throw new Error('Failed to open main server: ' + error)
     if listen.port != PORT
@@ -41,8 +39,10 @@ module.exports = ->
         port = msg[3]
         unless devices[id]
           console.log 'Connect:', msg, '\n'
-          device = makeGrid(port, type)
+          device = makeGrid port, type
           devices[id] = device
+          device.once 'ready', ->
+            monome.emit 'device', device
           monome.emit 'connect', device
 
       # device was removed

@@ -4,41 +4,42 @@ nodeOsc = require 'node-osc'
 
 module.exports = makeGrid = (devicePort, type)->
   grid        = new events.EventEmitter()  # object to be returned
-  client      = new nodeOsc.Client('localhost', devicePort)
   server      = null # create this once we have a port
-  prefix      = null
   setLedAddr  = null
   keyAddr     = null
   encAddr     = null
   tiltAddr    = null
-  ready       = false
-  isArc       = !!(type and type.match /monome arc.*/)
 
   # exposed with getters
+  client      = new nodeOsc.Client('localhost', devicePort) # device.osc
+  isArc       = !!(type and type.match /monome arc.*/)
+  prefix      = null
   width       = null
   height      = null
   port        = null
   id          = null
   host        = null
   rotation    = null
+  ready       = false
 
   new osc.Server 10200, (error, _server)->
     if error
-      console.log 'Error creating grid server:', error
+      console.error 'Error creating grid server:', error
       throw error
     server = _server
     port = server.port
     server.on 'message', (msg, info)->
       address = msg[0]
+      return unless address # an address is required
       if address == '/sys/prefix' then handlePrefix(msg)
+      else if address == keyAddr then handleKey(msg)
+      else if address == encAddr then handleEnc(msg)
+      else if address == tiltAddr then handleTilt(msg)
       else if address == '/sys/size' then handleSize(msg)
       else if address == '/sys/id' then handleId(msg)
       else if address == '/sys/host' then handleHost(msg)
       else if address == '/sys/rotation' then handleRotation(msg)
       else if address == '/sys/disconnect' then handleDisconnect(msg)
-      else if address == keyAddr then handleKey(msg)
-      else if address == encAddr then handleEnc(msg)
-      else if address == tiltAddr then handleTilt(msg)
     # we are ready to receive device info
     grid.emit 'listening', server.port
     # Set default port that device will send to
@@ -53,7 +54,7 @@ module.exports = makeGrid = (devicePort, type)->
       keyAddr     = prefix + '/ring/key'
       setLedAddr  = prefix + '/ring/set'
       encAddr     = prefix + '/enc/delta'
-    else
+    else # assume grid
       keyAddr     = prefix + '/grid/key'
       setLedAddr  = prefix + '/grid/led/set'
     grid.emit 'prefix', prefix
@@ -85,7 +86,8 @@ module.exports = makeGrid = (devicePort, type)->
     grid.emit 'tilt', msg[1], msg[2], msg[3]
   isReady = ->
     if not ready
-      if height and port and id and host and rotation and prefix
+      if height != null and rotation != null and
+      port and id and host and prefix
         ready = true
         grid.emit 'ready'
 

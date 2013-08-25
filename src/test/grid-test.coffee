@@ -49,7 +49,7 @@ describe 'makeGrid', ->
           '127.0.0.1'.should.equal gridC.host
           port.should.equal gridC.port
           '/testprefix'.should.equal gridC.prefix
-          (180).should.equal gridC.rotation
+          (0).should.equal gridC.rotation
           done(error)
 
         client.send '/sys/id', 'm9999999'
@@ -58,7 +58,7 @@ describe 'makeGrid', ->
         client.send '/sys/port', port
         client.send '/sys/prefix', '/testprefix'
         setTimeout =>
-          client.send '/sys/rotation', 180
+          client.send '/sys/rotation', 0
           error = null
         , 20
 
