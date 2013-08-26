@@ -3,12 +3,13 @@ osc     = require './osc'
 nodeOsc = require 'node-osc'
 
 module.exports = makeGrid = (devicePort, type)->
-  grid        = new events.EventEmitter()  # object to be returned
-  server      = null # create this once we have a port
-  setLedAddr  = null
-  keyAddr     = null
-  encAddr     = null
-  tiltAddr    = null
+  grid          = new events.EventEmitter()  # object to be returned
+  server        = null # create this once we have a port
+  setLedAddr    = null # grid only
+  setLevelAddr  = null
+  keyAddr       = null
+  encAddr       = null
+  tiltAddr      = null
 
   # exposed with getters
   client      = new nodeOsc.Client('localhost', devicePort) # device.osc
@@ -51,15 +52,16 @@ module.exports = makeGrid = (devicePort, type)->
     client.send '/sys/info', port
 
   handlePrefix = (msg)->
-    prefix        = msg[1]
-    tiltAddr      = prefix + 'tilt'
+    prefix    = msg[1]
+    tiltAddr  = prefix + '/tilt'
     if isArc
-      keyAddr     = prefix + '/enc/key'
-      setLedAddr  = prefix + '/ring/set'
-      encAddr     = prefix + '/enc/delta'
+      keyAddr       = prefix + '/enc/key'
+      encAddr       = prefix + '/enc/delta'
+      setLevelAddr  = prefix + '/ring/set'
     else # assume grid
-      keyAddr     = prefix + '/grid/key'
-      setLedAddr  = prefix + '/grid/led/set'
+      keyAddr       = prefix + '/grid/key'
+      setLedAddr    = prefix + '/grid/led/set'
+      setLevelAddr  = prefix + '/grid/led/level/set'
     grid.emit 'prefix', prefix
     isReady()
   handleSize = (msg)->
@@ -95,12 +97,14 @@ module.exports = makeGrid = (devicePort, type)->
         grid.emit 'ready', grid
 
   # Public Methods
-  grid.led = (x, y, i)->
-    client.send(setLedAddr, x, y, i)
+  grid.level = (x, y, i)->
+    client.send setLevelAddr, x, y, i
   grid.close = ->
     if server then server.kill()
 
   if isArc
+    grid.led = (x, y, s)->
+      client.send setLevelAddr, x, y, if s then 15 else 0
     Object.defineProperty grid, 'size',
       get: -> size
       enumerable: true
@@ -110,7 +114,9 @@ module.exports = makeGrid = (devicePort, type)->
     Object.defineProperty grid, 'height',
       get: -> 64
       enumerable: true
-  else
+  else # assume grid
+    grid.led =  (x, y, s)->
+      client.send(setLedAddr, x, y, if s then 1 else 0)
     Object.defineProperty grid, 'width',
       get: -> width
       enumerable: true

@@ -8,7 +8,8 @@ monode makes monome device discovery/interaction trivial and fun. [lol wut?](htt
 ```
 $ npm install monode
 $ node
-> var monode = require('monode')() // initialize;
+> var monodeInit = require('monode');
+> var monode = monodeInit();
 ```
 
 monode emits a 'device' event when a device becomes available.
@@ -34,6 +35,12 @@ device.led(x, y, state)
 device.led(0, 4, 1);
 // turn off again
 device.led(0, 4, 0);
+```
+
+device.level(x, y, intensity)
+```
+// set led level IF the device supports it
+device.level(0, 0, 8)
 ```
 
 device.close()
@@ -64,8 +71,8 @@ device.size   // integer, arc only, 2 or 4
 device.osc    // [node-osc Client](https://github.com/TheAlphaNerd/node-osc)
 
 // Assignable properties
-device.rotation // 0, 90, 180, or 270
-device.prefix // set or get
+device.rotation // integer - grid only - 0, 90, 180, or 270
+device.prefix   // string - set or get
 
 // Assignable properties update asynchronously.
 // An event will be fired when when the update occurs.
@@ -142,6 +149,8 @@ monode.on('device', function(device){
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 # Release History
+2.1.0 add led and level methods
+2.0.0 rename to monode
 1.1.2 Better Readme
 1.1.1 Bugfixes
 1.1.0 Add Arc Support
