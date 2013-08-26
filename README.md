@@ -1,31 +1,30 @@
-# node-monome
+# monode
 
 monome/arc toolkit
 
-node-monome makes monome device discovery/interaction trivial and fun. [lol wut?](http://monome.org)
+monode makes monome device discovery/interaction trivial and fun. [lol wut?](http://monome.org)
 
 ## Getting Started
 ```
-$ npm install node-monome
+$ npm install monode
 $ node
-> var nodeMonome = require('node-monome');
-> var monome = nodeMonome(); // initialize
+> var monode = require('monode')() // initialize;
 ```
 
-monome emits a 'device' event when a device becomes available.
-'device' triggers when node-monome initializes, AND when a device is connected via usb
+monode emits a 'device' event when a device becomes available.
+'device' triggers after monode initializes, AND when a device is connected via usb
 ```
 // light grid led on key press
-monome.on('device', function(device) {
+monode.on('device', function(device) {
   device.on('key', function(x, y, i) {
     device.led(x, y, i);
   });
 });
 ```
 
-Connected devices also accessible through the monome.devices object
+Connected devices also accessible through the monode.devices object
 ```
-console.log('Device Ids:', Object.keys(monome.devices));
+console.log('Device Ids:', Object.keys(monode.devices));
 ```
 # Documentation
 ## Device Methods
@@ -99,7 +98,7 @@ device.on('tilt', function(n, x, y, z){
   console.log('tilt:', n, x, y, z);
 });
 
-// disconnect is similar to monome.disconnect
+// disconnect is similar to the monode disconnect event
 device.on('disconnect', function(device){
   console.log('device disconnected:', device);
 });
@@ -109,25 +108,25 @@ device.on('prefix', function(prefix){
   console.log('prefix changed to:', prefix);
 });
 
-// ready is similar to monome.ready
+// ready is similar to the monode.device event
 device.on('ready', function(device){
   // assert(device.ready);
   console.log('device is ready:', device);
 });
 ```
 
-## monome Events
+## monode Events
 ```
 // connect
-monome.on('connect', function(device){
+monode.on('connect', function(device){
   console.log('a device was connected:', device);
 })
 // disconnect
-monome.on('disconnect', function(device){
+monode.on('disconnect', function(device){
   console.log('A device was disconnected:', device);
 })
 // device - triggered once the device has configured itself with width, height, etc
-monome.on('device', function(device){
+monode.on('device', function(device){
   console.log('A device was connected, and is ready to use')
   console.log('Port:', device.port);
   console.log('Dimentions:', device.width, device.height)
