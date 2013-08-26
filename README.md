@@ -91,23 +91,26 @@ rotation changed to: 180
 ```
 
 ## Device Events
-#### enc - arch encoder delta
+#### enc 
 ```
+// arc encoder delta
 device.on('enc', function(n, delta){
   console.log('Arc turn:', n, delta);
 });
 ```
 
-#### key - grid or arc2011
+#### key
 ```
+// grid and arc 2011
 device.on('key', function(x, y, s){
-  if (device.isArc) console.log('Push:', x, y);
+  if (device.isArc) console.log('Arc push:', x, y);
   else console.log('Grid Key:', x, y, s);
 });
 ```
 
-#### tilt - arc or grid
+#### tilt
 ```
+// arc or grid
 device.on('tilt', function(n, x, y, z){
   console.log('tilt:', n, x, y, z);
 });
