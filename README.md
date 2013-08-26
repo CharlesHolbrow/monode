@@ -2,7 +2,7 @@
 
 monome grid/arc toolkit
 
-monode makes monome device discovery/interaction trivial and fun. [lol wut?](http://monome.org)
+Monode makes monome device discovery/interaction trivial and fun. [lol wut?](http://monome.org)
 
 ## Getting Started
 ```
@@ -91,33 +91,46 @@ rotation changed to: 180
 ```
 
 ## Device Events
+#### enc - arch encoder delta
 ```
-// encoder delta - arc only
 device.on('enc', function(n, delta){
   console.log('Arc turn:', n, delta);
 });
+```
 
-// key - grid or arc2011
+#### key - grid or arc2011
+```
 device.on('key', function(x, y, s){
   if (device.isArc) console.log('Push:', x, y);
   else console.log('Grid Key:', x, y, s);
 });
+```
 
-// tilt - arc or grid
+#### tilt - arc or grid
+```
 device.on('tilt', function(n, x, y, z){
   console.log('tilt:', n, x, y, z);
 });
+```
 
-// disconnect is similar to the monode "disconnect" event
+#### disconnect 
+```
+// similar to the monode "disconnect" event
 device.on('disconnect', function(device){
   console.log('device disconnected:', device);
 });
+```
 
+#### prefix and rotation
+```
 // prefix and rotation work the same way
 device.on('prefix', function(prefix){
   console.log('prefix changed to:', prefix);
 });
+```
 
+#### ready
+```
 // ready is similar to the monode "device" event
 // use the monode "device" event to get devices...
 device.on('ready', function(device){
