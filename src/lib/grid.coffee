@@ -54,7 +54,7 @@ module.exports = makeGrid = (devicePort, type)->
     prefix        = msg[1]
     tiltAddr      = prefix + 'tilt'
     if isArc
-      keyAddr     = prefix + '/ring/key'
+      keyAddr     = prefix + '/enc/key'
       setLedAddr  = prefix + '/ring/set'
       encAddr     = prefix + '/enc/delta'
     else # assume grid
@@ -80,19 +80,19 @@ module.exports = makeGrid = (devicePort, type)->
     grid.emit 'rotation', rotation
     isReady()
   handleDisconnect = (msg)->
-    grid.emit 'disconnect'
+    grid.emit 'disconnect', grid
   handleKey = (msg)->
     grid.emit 'key', msg[1], msg[2], msg[3]
   handleEnc = (msg)->
     grid.emit 'enc', msg[1], msg[2]
   handleTilt = (msg)->
-    grid.emit 'tilt', msg[1], msg[2], msg[3]
+    grid.emit 'tilt', msg[1], msg[2], msg[3], msg[4]
   isReady = ->
     if not ready
       if (height or size) and rotation != null and
       port and id and host and prefix
         ready = true
-        grid.emit 'ready'
+        grid.emit 'ready', grid
 
   # Public Methods
   grid.led = (x, y, i)->
