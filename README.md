@@ -144,14 +144,19 @@ device.on('ready', function(device){
 ```
 
 ## monode Events
+#### device
 ```
-// device - triggered once the device has configured itself with width, height, etc
+// triggered once the device has configured itself with width, height, etc
 monode.on('device', function(device){
   console.log('A device was connected, and is ready to use')
   console.log('Port:', device.port);
   console.log('Dimentions:', device.width, device.height)
 });
-// connect (not recommended)
+```
+
+#### connect
+```
+// not recomended - just use "device" instead
 monode.on('connect', function(device){
   // port, width, height will still be undefinded
   console.log('a device was connected:', device);
@@ -159,27 +164,32 @@ monode.on('connect', function(device){
     console.log('Yay, now we can use it!');
   });
 });
-// disconnect
+```
+
+#### disconnect
+```
 monode.on('disconnect', function(device){
   console.log('A device was disconnected:', device);
 })
 ```
 
-# Requires serialosc 1.2a or later
+# Misc
+## Requires serialosc 1.2a or later
 [mac](http://monome.org/docs/setup:mac) 
 [win](http://monome.org/docs/setup:win) 
 [linux](http://monome.org/docs/setup:linux) 
 
-# Contributing
+## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
-# Release History
+## Release History
+2.1.1 Improve documentation
 2.1.0 add device.level method for arc and grid  
 2.0.0 rename to monode  
 1.1.2 Better Readme  
 1.1.1 Bugfixes  
 1.1.0 Add Arc Support  
 
-# License
+## License
 Copyright (c) 2013 Charles Holbrow  
 Licensed under the MIT license.
