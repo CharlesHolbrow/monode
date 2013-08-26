@@ -15,13 +15,13 @@ $ node
 monode emits a 'device' event when a monome device is ready to use.
 'device' triggers:
 - after a device is connected via usb
-- once for each connected device after monodeInit is called for the first time
+- once for each connected device after `monodeInit` is called for the first time
 
 ```
 // light grid led on key press
 monode.on('device', function(device) {
-  device.on('key', function(x, y, i) {
-    device.led(x, y, i);
+  device.on('key', function(x, y, s) {
+    device.led(x, y, s);
   });
 });
 ```
@@ -32,7 +32,7 @@ console.log('Device Ids:', Object.keys(monode.devices));
 ```
 # Documentation
 ## Device Methods
-device.led(x, y, state)
+#### device.led(x, y, state)
 ```
 // turn on led at position 0, 4
 device.led(0, 4, 1);
@@ -40,13 +40,13 @@ device.led(0, 4, 1);
 device.led(0, 4, 0);
 ```
 
-device.level(x, y, intensity)
+#### device.level(x, y, intensity)
 ```
 // set led level IF the device supports it
 device.level(0, 0, 8)
 ```
 
-device.close()
+#### device.close()
 ```
 // close the server listening for messages from the device
 // in most cases, you won't need this as it will happen
@@ -54,7 +54,7 @@ device.close()
 device.close()
 ```
 
-device.osc.send(address, val1, val2, ...)
+#### device.osc.send(address, val1, val2, ...)
 ```
 // send arbitrary osc message to serialosc
 device.osc.send(device.prefix + '/grid/led/all', 1);
@@ -119,28 +119,34 @@ device.on('prefix', function(prefix){
 });
 
 // ready is similar to the monode "device" event
+// use the monode "device" event to get devices...
 device.on('ready', function(device){
   // assert(device.ready);
+  // assert(device.width);
   console.log('device is ready:', device);
 });
 ```
 
 ## monode Events
 ```
-// connect
-monode.on('connect', function(device){
-  console.log('a device was connected:', device);
-})
-// disconnect
-monode.on('disconnect', function(device){
-  console.log('A device was disconnected:', device);
-})
 // device - triggered once the device has configured itself with width, height, etc
 monode.on('device', function(device){
   console.log('A device was connected, and is ready to use')
   console.log('Port:', device.port);
   console.log('Dimentions:', device.width, device.height)
 });
+// connect (not recommended)
+monode.on('connect', function(device){
+  // port, width, height will still be undefinded
+  console.log('a device was connected:', device);
+  device.on('ready', function(){
+    console.log('Yay, now we can use it!');
+  });
+});
+// disconnect
+monode.on('disconnect', function(device){
+  console.log('A device was disconnected:', device);
+})
 ```
 
 # Requires serialosc 1.2a or later
@@ -152,7 +158,7 @@ monode.on('device', function(device){
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 # Release History
-2.1.0 add device.level method for arc and grid
+2.1.0 add device.level method for arc and grid  
 2.0.0 rename to monode  
 1.1.2 Better Readme  
 1.1.1 Bugfixes  
