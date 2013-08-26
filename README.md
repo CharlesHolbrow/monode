@@ -1,6 +1,8 @@
 # node-monome
-monome and arc toolkit in node.js
-requires serialosc 1.2a or later
+
+monome/arc toolkit
+
+node-monome makes monome device discovery/interaction trivial and fun. [lol wut?](http://monome.org)
 
 ## Getting Started
 ```
@@ -10,12 +12,9 @@ $ node
 > var monome = nodeMonome(); // initialize
 ```
 
-# Documentation
-When a device is connected and ready to use, monome triggers a 'device' event
+monome emits a 'device' event when a device becomes available.
+'device' triggers when node-monome initializes, AND when a device is connected via usb
 ```
-var nodeMonome = require('node-monome');
-var monome = nodeMonome(); // initialize
-
 // light grid led on key press
 monome.on('device', function(device) {
   device.on('key', function(x, y, i) {
@@ -24,15 +23,35 @@ monome.on('device', function(device) {
 });
 ```
 
-Connected devices are stored in the devices object
+Connected devices also accessible through the monome.devices object
 ```
-// keys are a device id, such as 'm0000115'
-// values are device objects as described below
-monome.devices
+console.log('Device Ids:', Object.keys(monome.devices));
+```
+# Documentation
+## Device Methods
+device.led(x, y, state)
+```
+// turn on led at position 0, 4
+device.led(0, 4, 1);
+// turn off again
+device.led(0, 4, 0);
 ```
 
-## Device
-### Device Properties
+device.close()
+```
+// close the server listening for messages from the device
+// in most cases, you won't need this as it will happen
+// automagically when you exit node.js
+device.close()
+```
+
+device.osc.send(address, val1, val2, ...)
+```
+// send arbitrary osc message to serialosc
+device.osc.send(device.prefix + '/grid/led/all', 1);
+```
+
+## Device Properties
 ```
 // Read-only properties
 device.width  // integer - for arc, this is the same as size
@@ -46,7 +65,7 @@ device.size   // integer, arc only, 2 or 4
 device.osc    // [node-osc Client](https://github.com/TheAlphaNerd/node-osc)
 
 // Assignable properties
-device.rotation //  0, 90, 180, or 270
+device.rotation // 0, 90, 180, or 270
 device.prefix // set or get
 
 // Assignable properties update asynchronously.
@@ -60,23 +79,10 @@ device.prefix // set or get
 > device.rotation = 180; console.log(device.rotation);
 90
 rotation changed to: 180
-
-// turn on led at position 3, 4
-device.led(3, 4, 1);
-// turn off led
-device.led(3, 4, 0);
-
-// send arbitrary osc message to serialosc
-device.osc.send(device.prefix + '/grid/led/all', 1)
 ```
 
-### Device Events
+## Device Events
 ```
-// tilt - arc or grid
-device.on('tilt', function(n, x, y, z){
-  console.log('tilt:', n, x, y, z);
-});
-
 // encoder delta - arc only
 device.on('enc', function(n, delta){
   console.log('Arc turn:', n, delta);
@@ -86,6 +92,11 @@ device.on('enc', function(n, delta){
 device.on('key', function(x, y, s){
   if (device.isArc) console.log('Push:', x, y);
   else console.log('Grid Key:', x, y, s);
+});
+
+// tilt - arc or grid
+device.on('tilt', function(n, x, y, z){
+  console.log('tilt:', n, x, y, z);
 });
 
 // disconnect is similar to monome.disconnect
@@ -105,8 +116,7 @@ device.on('ready', function(device){
 });
 ```
 
-## monome
-### monome Events
+## monome Events
 ```
 // connect
 monome.on('connect', function(device){
@@ -124,10 +134,17 @@ monome.on('device', function(device){
 });
 ```
 
+# Requires serialosc 1.2a or later
+[mac](http://monome.org/docs/setup:mac) 
+[win](http://monome.org/docs/setup:win) 
+[linux](http://monome.org/docs/setup:linux) 
+
 # Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 # Release History
+1.1.2 Better Readme
+1.1.1 Bugfixes
 1.1.0 Add Arc Support
 
 # License
