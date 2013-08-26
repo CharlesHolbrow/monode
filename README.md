@@ -72,13 +72,37 @@ device.osc.send(device.prefix + '/grid/led/all', 1)
 
 ### Device Events
 ```
-tilt // arc,grid
-enc // arc only
-key // grid or arc2011
-disconnect
-prefix
-rotation
-ready // consider removing this
+// tilt - arc or grid
+device.on('tilt', function(n, x, y, z){
+  console.log('tilt:', n, x, y, z);
+});
+
+// encoder delta - arc only
+device.on('enc', function(n, delta){
+  console.log('Arc turn:', n, delta);
+});
+
+// key - grid or arc2011
+device.on('key', function(x, y, s){
+  if (device.isArc) console.log('Push:', x, y);
+  else console.log('Grid Key:', x, y, s);
+});
+
+// disconnect is similar to monome.disconnect
+device.on('disconnect', function(device){
+  console.log('device disconnected:', device);
+});
+
+// prefix and rotation work the same way
+device.on('prefix', function(prefix){
+  console.log('prefix changed to:', prefix);
+});
+
+// ready is similar to monome.ready
+device.on('ready', function(device){
+  // assert(device.ready);
+  console.log('device is ready:', device);
+});
 ```
 
 ## monome
@@ -92,7 +116,7 @@ monome.on('connect', function(device){
 monome.on('disconnect', function(device){
   console.log('A device was disconnected:', device);
 })
-// device - fired once the device has configured itself with width, height, etc
+// device - triggered once the device has configured itself with width, height, etc
 monome.on('device', function(device){
   console.log('A device was connected, and is ready to use')
   console.log('Port:', device.port);
