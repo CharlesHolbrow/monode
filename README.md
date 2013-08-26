@@ -1,6 +1,6 @@
 # monode
 
-monome/arc toolkit
+monome grid/arc toolkit
 
 monode makes monome device discovery/interaction trivial and fun. [lol wut?](http://monome.org)
 
@@ -12,8 +12,11 @@ $ node
 > var monode = monodeInit();
 ```
 
-monode emits a 'device' event when a device becomes available.
-'device' triggers after monode initializes, AND when a device is connected via usb
+monode emits a 'device' event when a monome device is ready to use.
+'device' triggers:
+- after a device is connected via usb
+- once for each connected device after monodeInit is called for the first time
+
 ```
 // light grid led on key press
 monode.on('device', function(device) {
@@ -105,7 +108,7 @@ device.on('tilt', function(n, x, y, z){
   console.log('tilt:', n, x, y, z);
 });
 
-// disconnect is similar to the monode disconnect event
+// disconnect is similar to the monode "disconnect" event
 device.on('disconnect', function(device){
   console.log('device disconnected:', device);
 });
@@ -115,7 +118,7 @@ device.on('prefix', function(prefix){
   console.log('prefix changed to:', prefix);
 });
 
-// ready is similar to the monode.device event
+// ready is similar to the monode "device" event
 device.on('ready', function(device){
   // assert(device.ready);
   console.log('device is ready:', device);
@@ -149,11 +152,11 @@ monode.on('device', function(device){
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 # Release History
-2.1.0 add led and level methods
-2.0.0 rename to monode
-1.1.2 Better Readme
-1.1.1 Bugfixes
-1.1.0 Add Arc Support
+2.1.0 add device.level method for arc and grid
+2.0.0 rename to monode  
+1.1.2 Better Readme  
+1.1.1 Bugfixes  
+1.1.0 Add Arc Support  
 
 # License
 Copyright (c) 2013 Charles Holbrow  
