@@ -1,8 +1,8 @@
 {
-  "name": "node-monome",
+  "name": "monode",
   "description": "Toolkit for the monome and arc osc controllers",
   "version": "1.1.2",
-  "homepage": "https://github.com/charlesholbrow/node-monome",
+  "homepage": "https://github.com/charlesholbrow/monode",
   "author": {
     "name": "Charles Holbrow",
     "email": "charlesholbrow@gmail.com",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/charlesholbrow/node-monome.git"
+    "url": "git://github.com/charlesholbrow/monode.git"
   },
   "bugs": {
-    "url": "https://github.com/charlesholbrow/node-monome/issues"
+    "url": "https://github.com/charlesholbrow/monode/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/charlesholbrow/node-monome/blob/master/LICENSE-MIT"
+      "url": "https://github.com/charlesholbrow/monode/blob/master/LICENSE-MIT"
     }
   ],
   "main": "out/lib/monome",
