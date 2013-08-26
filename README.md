@@ -18,9 +18,9 @@ $ node
 
 ## Getting Started With Better Practices
 monode emits a 'device' event when a monome device is ready to use.
-'device' triggers:
-- after a device is connected via usb
-- once for each connected device after `monodeInit` is called for the first time
+
+- "device" triggers after a device is connected via usb
+- "device" triggers once for each connected device after `monodeInit` is called for the first time
 
 ```
 // light grid led on key press
@@ -36,7 +36,7 @@ monode.on('device', function(device) {
 
 Connected devices also accessible through the monode.devices object
 ```
-console.log('Device Ids:', Object.keys(monode.devices));
+console.log('Device IDs:', Object.keys(monode.devices));
 ```
 
 # Documentation
@@ -79,6 +79,7 @@ device.port   // integer
 device.id     // string ex: "m0000164"
 device.type   // string ex: "monome arc 2", "monome 64"
 device.isArc  // bool
+device.ready  // bool
 device.size   // integer, arc only, 2 or 4
 device.osc    // [node-osc Client](https://github.com/TheAlphaNerd/node-osc)
 
