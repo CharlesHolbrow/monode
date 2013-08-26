@@ -8,10 +8,15 @@ Monode makes monome device discovery/interaction trivial and fun. [lol wut?](htt
 ```
 $ npm install monode
 $ node
-> var monodeInit = require('monode');
-> var monode = monodeInit();
+> monode = require('monode')();
+// now plug your monome grid in
+> monode.grid.led(0, 0, 1);
+// now plug your arc in
+> monode.arc.led(0, 0, 1);   // turn on
+> monode.arc.level(0, 1, 8); // set level
 ```
 
+## Getting Started With Better Practices
 monode emits a 'device' event when a monome device is ready to use.
 'device' triggers:
 - after a device is connected via usb
@@ -19,6 +24,9 @@ monode emits a 'device' event when a monome device is ready to use.
 
 ```
 // light grid led on key press
+var monodeInit = require('monode');
+var monode = monodeInit();
+
 monode.on('device', function(device) {
   device.on('key', function(x, y, s) {
     device.led(x, y, s);
@@ -30,6 +38,7 @@ Connected devices also accessible through the monode.devices object
 ```
 console.log('Device Ids:', Object.keys(monode.devices));
 ```
+
 # Documentation
 ## Device Methods
 #### device.led(x, y, state)
@@ -143,6 +152,13 @@ device.on('ready', function(device){
 });
 ```
 
+## monode Properties
+#### monode.grid
+A convenience property -- the most recently added monome grid. Usefull when fooling around in the console.
+
+#### monode.arc
+A convenience property -- the most recently added monome arc.
+
 ## monode Events
 #### device
 ```
@@ -183,6 +199,7 @@ monode.on('disconnect', function(device){
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+2.2.0 Add monode.grid and monode.arc convenience properties
 2.1.1 Improve documentation
 2.1.0 add device.level method for arc and grid  
 2.0.0 rename to monode  

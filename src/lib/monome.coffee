@@ -43,7 +43,13 @@ module.exports = ->
           devices[id] = device
           device.once 'ready', ->
             monome.emit 'device', device
+          # store newly added devices in convenience properties
+          if type.match /monome arc \d+/
+            monome.arc = device
+          else
+            monome.grid = device
           monome.emit 'connect', device
+
 
       # device was removed
       if msg[0] == '/serialosc/remove'
