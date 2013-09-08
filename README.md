@@ -200,13 +200,14 @@ monode.on('disconnect', function(device){
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-2.2.0 Add monode.grid and monode.arc convenience properties
-2.1.1 Improve documentation
-2.1.0 add device.level method for arc and grid  
-2.0.0 rename to monode  
-1.1.2 Better Readme  
-1.1.1 Bugfixes  
-1.1.0 Add Arc Support  
+
+- 2.2.0 Add monode.grid and monode.arc convenience properties  
+- 2.1.1 Improve documentation  
+- 2.1.0 add device.level method for arc and grid  
+- 2.0.0 rename node-monome to monode  
+- 1.1.2 Better Readme  
+- 1.1.1 Bugfixes  
+- 1.1.0 Add Arc Support  
 
 ## License
 Copyright (c) 2013 Charles Holbrow  
