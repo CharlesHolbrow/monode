@@ -201,7 +201,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
-- 2.2.1 Smarter detection of open UDP ports  
+- 2.2.2 Smarter detection of open UDP ports  
 - 2.2.0 Add monode.grid and monode.arc convenience properties  
 - 2.1.1 Improve documentation  
 - 2.1.0 add device.level method for arc and grid  
