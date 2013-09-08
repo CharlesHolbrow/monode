@@ -21,6 +21,16 @@ describe 'osc', ->
         console.log('found port', server.port)
         done(err)
 
+    it 'should detect open ports when init before slow sync process', (done)->
+      @timeout 2000
+      server = osc.Server 9211, (err, server)->
+        server.port.should.eql 9211
+        done()
+      i = 0
+      while i < 5000000
+        Math.sqrt(2)
+        i++
+
   describe 'Client', ->
     it 'should be an instance of node-osc.Client', ->
       client = new osc.Client(10109)
