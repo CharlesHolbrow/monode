@@ -191,7 +191,7 @@ monode.on('disconnect', function(device){
 ```
 
 # Misc
-## Requires serialosc 1.2a or later
+## Requires serialosc 1.2a or later. Serialosc 1.4 or later recommended
 [mac](http://monome.org/docs/setup:mac) 
 [win](http://monome.org/docs/setup:win) 
 [linux](http://monome.org/docs/setup:linux) 
@@ -201,6 +201,11 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+- 3.0.0  
+  - Uses `127.0.0.1` instead of `localhost` and `0.0.0.0` for all ports  
+  - Tested with serialosc 1.4  
+  - Osc.server never tries to open the same port twice  
+  - Small bugfixes  
 - 2.2.3 Slightly faster device detection
 - 2.2.2 Smarter detection of open UDP ports  
 - 2.2.0 Add monode.grid and monode.arc convenience properties  

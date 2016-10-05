@@ -12,7 +12,8 @@ events    = require 'events'
 makeGrid  = require './grid'
 osc       = require './osc'
 
-PORT = 4545
+monome  = undefined
+PORT    = 45450
 
 module.exports = ->
   if monome then return monome
@@ -54,9 +55,11 @@ module.exports = ->
       # device was removed
       if msg[0] == '/serialosc/remove'
         id = msg[1]
-        if devices[id]
+        device = devices[id]
+        if device
           console.log 'Disconnect:', msg, '\n'
           monome.emit 'disconnect', device
+          device.close()
           delete devices[id]
 
       # we need to request notification again

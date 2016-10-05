@@ -12,7 +12,7 @@ module.exports = makeGrid = (devicePort, type)->
   tiltAddr      = null
 
   # exposed with getters
-  client      = new nodeOsc.Client('localhost', devicePort) # device.osc
+  client      = new nodeOsc.Client('127.0.0.1', devicePort) # device.osc
   prefix      = null
   width       = null
   height      = null
