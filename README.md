@@ -22,7 +22,7 @@ monode emits a 'device' event when a monome device is ready to use.
 - "device" triggers after a device is connected via usb
 - "device" triggers once for each connected device after `monodeInit` is called for the first time
 
-```
+```javascript
 // light grid led on key press
 var monodeInit = require('monode');
 var monode = monodeInit();
@@ -35,14 +35,14 @@ monode.on('device', function(device) {
 ```
 
 Connected devices also accessible through the monode.devices object
-```
+```javascript
 console.log('Device IDs:', Object.keys(monode.devices));
 ```
 
 # Documentation
 ## Device Methods
 #### device.led(x, y, state)
-```
+```javascript
 // turn on led at position 0, 4
 device.led(0, 4, 1);
 // turn off again
@@ -50,13 +50,13 @@ device.led(0, 4, 0);
 ```
 
 #### device.level(x, y, intensity)
-```
+```javascript
 // set led level IF the device supports it
 device.level(0, 0, 8)
 ```
 
 #### device.close()
-```
+```javascript
 // close the server listening for messages from the device
 // in most cases, you won't need this as it will happen
 // automagically when you exit node.js
@@ -64,13 +64,13 @@ device.close()
 ```
 
 #### device.osc.send(address, val1, val2, ...)
-```
+```javascript
 // send arbitrary osc message to serialosc
 device.osc.send(device.prefix + '/grid/led/all', 1);
 ```
 
 ## Device Properties
-```
+```javascript
 // Read-only properties
 device.width  // integer - for arc, this is the same as size
 device.height // integer - for arc this is always 64
@@ -102,7 +102,7 @@ rotation changed to: 180
 
 ## Device Events
 #### enc 
-```
+```javascript
 // arc encoder delta
 device.on('enc', function(n, delta){
   console.log('Arc turn:', n, delta);
@@ -110,7 +110,7 @@ device.on('enc', function(n, delta){
 ```
 
 #### key
-```
+```javascript
 // grid and arc 2011
 device.on('key', function(x, y, s){
   if (device.isArc) console.log('Arc push:', x, y);
@@ -119,7 +119,7 @@ device.on('key', function(x, y, s){
 ```
 
 #### tilt
-```
+```javascript
 // arc or grid
 device.on('tilt', function(n, x, y, z){
   console.log('tilt:', n, x, y, z);
@@ -127,7 +127,7 @@ device.on('tilt', function(n, x, y, z){
 ```
 
 #### disconnect 
-```
+```javascript
 // similar to the monode "disconnect" event
 device.on('disconnect', function(device){
   console.log('device disconnected:', device);
@@ -135,7 +135,7 @@ device.on('disconnect', function(device){
 ```
 
 #### prefix and rotation
-```
+```javascript
 // prefix and rotation work the same way
 device.on('prefix', function(prefix){
   console.log('prefix changed to:', prefix);
@@ -143,7 +143,7 @@ device.on('prefix', function(prefix){
 ```
 
 #### ready
-```
+```javascript
 // ready is similar to the monode "device" event
 // use the monode "device" event to get devices...
 device.on('ready', function(device){
@@ -162,7 +162,7 @@ A convenience property -- the most recently added monome arc.
 
 ## monode Events
 #### device
-```
+```javascript
 // triggered once the device has configured itself with width, height, etc
 monode.on('device', function(device){
   console.log('A device was connected, and is ready to use')
@@ -172,7 +172,7 @@ monode.on('device', function(device){
 ```
 
 #### connect
-```
+```javascript
 // not recomended - just use "device" instead
 monode.on('connect', function(device){
   // port, width, height will still be undefinded
@@ -184,7 +184,7 @@ monode.on('connect', function(device){
 ```
 
 #### disconnect
-```
+```javascript
 monode.on('disconnect', function(device){
   console.log('A device was disconnected:', device);
 })
@@ -201,6 +201,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+- 3.0.1 syntax highlighting in readme
 - 3.0.0  
   - Uses `127.0.0.1` instead of `localhost` and `0.0.0.0` for all ports  
   - Tested with serialosc 1.4  

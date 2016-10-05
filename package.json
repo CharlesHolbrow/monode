@@ -1,7 +1,7 @@
 {
   "name": "monode",
   "description": "Toolkit for the monome and arc osc controllers",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "homepage": "https://github.com/charlesholbrow/monode",
   "author": {
     "name": "Charles Holbrow",
